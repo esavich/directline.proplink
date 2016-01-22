@@ -9,7 +9,7 @@ class CCustomTypePropLink
         return array(
             'PROPERTY_TYPE' => 'S',
             'USER_TYPE' => 'propLink',
-            'DESCRIPTION' => 'привязка с к свойству',
+            'DESCRIPTION' => GetMessage("DIRECTLINE_PROPLINK_PRIVAZKA_K_SVOYSTVU"),
             'GetPropertyFieldHtml' => array(__CLASS__, 'GetPropertyFieldHtml'),
         );
     }
