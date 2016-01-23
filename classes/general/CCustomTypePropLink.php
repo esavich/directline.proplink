@@ -1,4 +1,5 @@
 <?php
+IncludeModuleLangFile(__FILE__);
 
 class CCustomTypePropLink
 {
@@ -11,7 +12,21 @@ class CCustomTypePropLink
             'USER_TYPE' => 'propLink',
             'DESCRIPTION' => GetMessage("DIRECTLINE_PROPLINK_PRIVAZKA_K_SVOYSTVU"),
             'GetPropertyFieldHtml' => array(__CLASS__, 'GetPropertyFieldHtml'),
+            'GetAdminListViewHTML' => array(__CLASS__, 'GetAdminListViewHTML')
         );
+    }
+
+    public static function GetAdminListViewHTML($arProperty, $value, $strHTMLControlName)
+    {
+        kint($arProperty, $value, $strHTMLControlName);
+        if ($value["VALUE"]) {
+            $propArr = CIBlockProperty::GetByID($value['VALUE'])->Fetch();
+            $str = $propArr['NAME'] . ' [id: ' . $propArr['ID'] . '] (iblock: ' . $propArr['IBLOCK_ID'] . ')';
+            return $str;
+        } else {
+
+            return '';
+        }
     }
 
     public static function GetPropertyFieldHtml($arProperty, $value, $strHTMLControlName)
@@ -20,7 +35,7 @@ class CCustomTypePropLink
         global $APPLICATION;
         CJSCore::Init(array("jquery"));
         $path = str_replace($_SERVER['DOCUMENT_ROOT'], '', __DIR__);
-        $APPLICATION->AddHeadScript('/bitrix/js/directline.proplink/script.js');
+        $APPLICATION->AddHeadScript('/bitrix/js/directline.proplink/script.js', true);
         $iblocksObj = CIBlock::GetList(Array("NAME" => "ASC"), Array('ACTIVE' => 'Y'), true);
         $iblocks = array();
         $props = array();
