@@ -18,7 +18,7 @@ class CCustomTypePropLink
 
     public static function GetAdminListViewHTML($arProperty, $value, $strHTMLControlName)
     {
-        kint($arProperty, $value, $strHTMLControlName);
+
         if ($value["VALUE"]) {
             $propArr = CIBlockProperty::GetByID($value['VALUE'])->Fetch();
             $str = $propArr['NAME'] . ' [id: ' . $propArr['ID'] . '] (iblock: ' . $propArr['IBLOCK_ID'] . ')';
