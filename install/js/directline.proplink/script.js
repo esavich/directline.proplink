@@ -19,8 +19,6 @@ jQuery(function ($) {
     $('.propValueLink_PROP').on('change', function () {
         var propId = $(this).val();
         var id = $(this).attr('id').replace('_PROPS', '');
-        console.log(id);
-        console.log(propId);
         if (propId) {
             if (!propVariantsByPropId[propId]) {
                 getPropVariants(propId, function () {
@@ -45,7 +43,6 @@ jQuery(function ($) {
                 'PROPERTY_ID': pid,
                 'VALUE': val
             };
-            console.log(glued);
             glued = JSON.stringify(glued);
             hidden.val(glued);
         } else {
@@ -100,7 +97,6 @@ jQuery(function ($) {
                     if (r.PROPERTY_TYPE == 'L' && typeof r.LIST == 'object') {
                         propVariantsByPropId[propId]['LIST'] = r.LIST;
                     }
-                    console.log(propVariantsByPropId);
                     callback();
                 }
             }
@@ -114,7 +110,6 @@ jQuery(function ($) {
         var oldControl = $("#" + id + "_VALUE");
         var propSelect = $("#" + id + "_PROPS");
         value = propSelect.data('initial-value');
-        console.log(value);
         oldControl.remove();
         if (prop.TYPE == 'L') {
             control = $('<select></select>').addClass('propValueLink_VALUE_SELECT').attr({id: id + '_VALUE'});

@@ -20,7 +20,6 @@ class CCustomTypePropValueLink
 
     public static function GetPropertyFieldHtml($arProperty, $value, $strHTMLControlName)
     {
-        kint($arProperty, $value, $strHTMLControlName);
         global $APPLICATION;
         CJSCore::Init(array("jquery"));
         $path = str_replace($_SERVER['DOCUMENT_ROOT'], '', __DIR__);
@@ -38,7 +37,6 @@ class CCustomTypePropValueLink
         if ($value['VALUE']["PROPERTY_ID"]) {
             $propObj = CIBlockProperty::GetByID($value['VALUE']["PROPERTY_ID"]);
             while ($propArr = $propObj->Fetch()) {
-                kint($propArr);
                 $currentIblock = $propArr['IBLOCK_ID'];
             }
         }
@@ -75,13 +73,11 @@ class CCustomTypePropValueLink
 
     function ConvertToDB($arProperty, $value)
     {
-//        kint($arProperty, $value);
         return $value;
     }
 
     function ConvertFromDB($arProperty, $value)
     {
-//        kint($arProperty, $value, 'from');
         $value['VALUE'] = json_decode($value['VALUE'], true);
         return $value;
     }
