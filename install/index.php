@@ -63,6 +63,7 @@ Class directline_proplink extends CModule
     function InstallEvents()
     {
         RegisterModuleDependences('iblock', 'OnIBlockPropertyBuildList', self::MODULE_ID, 'CCustomTypePropLink', 'GetUserTypeDescription');
+        RegisterModuleDependences('iblock', 'OnIBlockPropertyBuildList', self::MODULE_ID, 'CCustomTypePropValueLink', 'GetUserTypeDescription');
 
         return true;
     }
@@ -78,6 +79,7 @@ Class directline_proplink extends CModule
     function UnInstallEvents()
     {
         UnRegisterModuleDependences('iblock', 'OnIBlockPropertyBuildList', self::MODULE_ID, 'CCustomTypePropLink', 'GetUserTypeDescription');
+        UnRegisterModuleDependences('iblock', 'OnIBlockPropertyBuildList', self::MODULE_ID, 'CCustomTypePropValueLink', 'GetUserTypeDescription');
 
 
         return true;

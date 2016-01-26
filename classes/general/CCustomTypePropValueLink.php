@@ -1,7 +1,7 @@
 <?php
 IncludeModuleLangFile(__FILE__);
 
-class CCustomTypePropLink
+class CCustomTypePropValueLink
 {
 
 
@@ -9,29 +9,18 @@ class CCustomTypePropLink
     {
         return array(
             'PROPERTY_TYPE' => 'S',
-            'USER_TYPE' => 'propLink',
-            'DESCRIPTION' => GetMessage("DIRECTLINE_PROPLINK_PRIVAZKA_K_SVOYSTVU"),
+            'USER_TYPE' => 'propValueLink',
+            'DESCRIPTION' => GetMessage("DIRECTLINE_PROPLINK_PRIVAZKA_K_ZNACHENIU_SVOYSTVU"),
             'GetPropertyFieldHtml' => array(__CLASS__, 'GetPropertyFieldHtml'),
-            'GetAdminListViewHTML' => array(__CLASS__, 'GetAdminListViewHTML')
+            'ConvertToDB' => array(__CLASS__, 'ConvertToDB'),
+            'ConvertFromDB' => array(__CLASS__, 'ConvertFromDB')
+
         );
-    }
-
-    public static function GetAdminListViewHTML($arProperty, $value, $strHTMLControlName)
-    {
-
-        if ($value["VALUE"]) {
-            $propArr = CIBlockProperty::GetByID($value['VALUE'])->Fetch();
-            $str = $propArr['NAME'] . ' [id: ' . $propArr['ID'] . '] (iblock: ' . $propArr['IBLOCK_ID'] . ')';
-            return $str;
-        } else {
-
-            return '';
-        }
     }
 
     public static function GetPropertyFieldHtml($arProperty, $value, $strHTMLControlName)
     {
-
+        kint($arProperty, $value, $strHTMLControlName);
         global $APPLICATION;
         CJSCore::Init(array("jquery"));
         $path = str_replace($_SERVER['DOCUMENT_ROOT'], '', __DIR__);
@@ -46,14 +35,15 @@ class CCustomTypePropLink
             $iblocks[] = $iblockArr;
             $iblocksIdList[] = $iblockArr['ID'];
         }
-        if ($value['VALUE']) {
-            $propObj = CIBlockProperty::GetByID($value['VALUE']);
+        if ($value['VALUE']["PROPERTY_ID"]) {
+            $propObj = CIBlockProperty::GetByID($value['VALUE']["PROPERTY_ID"]);
             while ($propArr = $propObj->Fetch()) {
+                kint($propArr);
                 $currentIblock = $propArr['IBLOCK_ID'];
             }
         }
-
-        $html = '<select name="" class="' . $arProperty['USER_TYPE'] . '_IBLOCK"  id="IBLOCK_' . md5($strHTMLControlName['VALUE']) . '">';
+        $html = '<input type="hidden"  name="' . $strHTMLControlName['VALUE'] . '"  id="IBLOCK_' . md5($strHTMLControlName['VALUE']) . '_HIDDEN" value="' . htmlentities(json_encode($value["VALUE"])) . '">';
+        $html .= '<select name="" class="' . $arProperty['USER_TYPE'] . '_IBLOCK"  id="IBLOCK_' . md5($strHTMLControlName['VALUE']) . '">';
         $html .= '<option disabled';
         if (!$currentIblock) {
             $html .= ' selected';
@@ -68,9 +58,10 @@ class CCustomTypePropLink
         }
         $html .= '</select>';
 
-        $html .= '<select name="' . $strHTMLControlName['VALUE'] . '"';
+        $html .= '<select ';
         if ($value['VALUE']) {
-            $html .= 'data-initial-propid="' . $value['VALUE'] . '"';
+            $html .= 'data-initial-propid="' . $value['VALUE']['PROPERTY_ID'] . '"';
+            $html .= 'data-initial-value="' . $value['VALUE']['VALUE'] . '"';
         }
         $html .= '  class="' . $arProperty['USER_TYPE'] . '_PROP" id="IBLOCK_' . md5($strHTMLControlName['VALUE']) . '_PROPS">';
 
@@ -80,5 +71,18 @@ class CCustomTypePropLink
 
         return $html;
 
+    }
+
+    function ConvertToDB($arProperty, $value)
+    {
+//        kint($arProperty, $value);
+        return $value;
+    }
+
+    function ConvertFromDB($arProperty, $value)
+    {
+//        kint($arProperty, $value, 'from');
+        $value['VALUE'] = json_decode($value['VALUE'], true);
+        return $value;
     }
 }
