@@ -34,7 +34,7 @@ if (!isset($_GET['iblockId']) && !isset($_GET['propId'])) {
                     array("SORT" => "ASC", "VALUE" => "ASC"),
                     array("PROPERTY_ID" => $PROP_ID)
                 );
-                while($enumArr = $enumObj->Fetch()) {
+                while ($enumArr = $enumObj->Fetch()) {
                     $resp['LIST'][$enumArr['ID']] = $enumArr["VALUE"];
                 }
             }

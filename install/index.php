@@ -38,8 +38,9 @@ Class directline_proplink extends CModule
         if (is_dir($p = $_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/' . self::MODULE_ID . '/admin')) {
             if ($dir = opendir($p)) {
                 while (false !== $item = readdir($dir)) {
-                    if ($item == '..' || $item == '.' || $item == 'menu.php')
+                    if ($item == '..' || $item == '.' || $item == 'menu.php') {
                         continue;
+                    }
                     file_put_contents($file = $_SERVER['DOCUMENT_ROOT'] . '/bitrix/admin/' . self::MODULE_ID . '_' . $item,
                         '<' . '? require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/' . self::MODULE_ID . '/admin/' . $item . '");?' . '>');
                 }
@@ -49,21 +50,26 @@ Class directline_proplink extends CModule
         if (is_dir($p = $_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/' . self::MODULE_ID . '/install/components')) {
             if ($dir = opendir($p)) {
                 while (false !== $item = readdir($dir)) {
-                    if ($item == '..' || $item == '.')
+                    if ($item == '..' || $item == '.') {
                         continue;
-                    CopyDirFiles($p . '/' . $item, $_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/' . $item, $ReWrite = True, $Recursive = True);
+                    }
+                    CopyDirFiles($p . '/' . $item, $_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/' . $item,
+                        $ReWrite = true, $Recursive = true);
                 }
                 closedir($dir);
             }
         }
-        CopyDirFiles($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/" . self::MODULE_ID . "/install/js/", $_SERVER["DOCUMENT_ROOT"] . "/bitrix/js", true, true);
+        CopyDirFiles($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/" . self::MODULE_ID . "/install/js/",
+            $_SERVER["DOCUMENT_ROOT"] . "/bitrix/js", true, true);
         return true;
     }
 
     function InstallEvents()
     {
-        RegisterModuleDependences('iblock', 'OnIBlockPropertyBuildList', self::MODULE_ID, 'CCustomTypePropLink', 'GetUserTypeDescription');
-        RegisterModuleDependences('iblock', 'OnIBlockPropertyBuildList', self::MODULE_ID, 'CCustomTypePropValueLink', 'GetUserTypeDescription');
+        RegisterModuleDependences('iblock', 'OnIBlockPropertyBuildList', self::MODULE_ID, 'CCustomTypePropLink',
+            'GetUserTypeDescription');
+        RegisterModuleDependences('iblock', 'OnIBlockPropertyBuildList', self::MODULE_ID, 'CCustomTypePropValueLink',
+            'GetUserTypeDescription');
 
         return true;
     }
@@ -78,8 +84,10 @@ Class directline_proplink extends CModule
 
     function UnInstallEvents()
     {
-        UnRegisterModuleDependences('iblock', 'OnIBlockPropertyBuildList', self::MODULE_ID, 'CCustomTypePropLink', 'GetUserTypeDescription');
-        UnRegisterModuleDependences('iblock', 'OnIBlockPropertyBuildList', self::MODULE_ID, 'CCustomTypePropValueLink', 'GetUserTypeDescription');
+        UnRegisterModuleDependences('iblock', 'OnIBlockPropertyBuildList', self::MODULE_ID, 'CCustomTypePropLink',
+            'GetUserTypeDescription');
+        UnRegisterModuleDependences('iblock', 'OnIBlockPropertyBuildList', self::MODULE_ID, 'CCustomTypePropValueLink',
+            'GetUserTypeDescription');
 
 
         return true;
@@ -90,8 +98,9 @@ Class directline_proplink extends CModule
         if (is_dir($p = $_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/' . self::MODULE_ID . '/admin')) {
             if ($dir = opendir($p)) {
                 while (false !== $item = readdir($dir)) {
-                    if ($item == '..' || $item == '.')
+                    if ($item == '..' || $item == '.') {
                         continue;
+                    }
                     unlink($_SERVER['DOCUMENT_ROOT'] . '/bitrix/admin/' . self::MODULE_ID . '_' . $item);
                 }
                 closedir($dir);
@@ -100,13 +109,15 @@ Class directline_proplink extends CModule
         if (is_dir($p = $_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/' . self::MODULE_ID . '/install/components')) {
             if ($dir = opendir($p)) {
                 while (false !== $item = readdir($dir)) {
-                    if ($item == '..' || $item == '.' || !is_dir($p0 = $p . '/' . $item))
+                    if ($item == '..' || $item == '.' || !is_dir($p0 = $p . '/' . $item)) {
                         continue;
+                    }
 
                     $dir0 = opendir($p0);
                     while (false !== $item0 = readdir($dir0)) {
-                        if ($item0 == '..' || $item0 == '.')
+                        if ($item0 == '..' || $item0 == '.') {
                             continue;
+                        }
                         DeleteDirFilesEx('/bitrix/components/' . $item . '/' . $item0);
                     }
                     closedir($dir0);
@@ -114,7 +125,8 @@ Class directline_proplink extends CModule
                 closedir($dir);
             }
         }
-        DeleteDirFiles($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/" . self::MODULE_ID . "/install/js/", $_SERVER["DOCUMENT_ROOT"] . "/bitrix/js");
+        DeleteDirFiles($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/" . self::MODULE_ID . "/install/js/",
+            $_SERVER["DOCUMENT_ROOT"] . "/bitrix/js");
 
         return true;
     }
