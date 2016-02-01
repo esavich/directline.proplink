@@ -64,7 +64,13 @@ class CCustomTypePropValueLink
         $html .= '  class="' . $arProperty['USER_TYPE'] . '_PROP" id="IBLOCK_' . md5($strHTMLControlName['VALUE']) . '_PROPS">';
 
         $html .= '</select>';
-
+        if ($arProperty['WITH_DESCRIPTION'] == 'Y') {
+            $html .= '<br>';
+            $html .= '<br>';
+            $html .= GetMessage("DIRECTLINE_PROPLINK_DESCRIPTION");
+            $html .= ' : ';
+            $html .= '<input type="text" name="' . $strHTMLControlName['DESCRIPTION'] . '" value="' . $value['DESCRIPTION'] . '">';
+        }
         $html .= '<hr>';
 
         return $html;
