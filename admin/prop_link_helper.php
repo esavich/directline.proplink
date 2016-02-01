@@ -37,6 +37,25 @@ if (!isset($_GET['iblockId']) && !isset($_GET['propId'])) {
                 while ($enumArr = $enumObj->Fetch()) {
                     $resp['LIST'][$enumArr['ID']] = $enumArr["VALUE"];
                 }
+            } elseif ($propArr['PROPERTY_TYPE'] == 'S' && $propArr['USER_TYPE'] == 'directory') {
+                $variantsObj = CIBlockElement::GetPropertyValues($propArr['IBLOCK_ID'], array(
+                    '!PROPERTY_' . $propArr[ID] => false
+                ), false,
+                    array("ID" => $propArr['ID']));
+                $variants = array();
+                while ($variantsArr = $variantsObj->Fetch()) {
+                    $variants[] = $variantsArr[$propArr['ID']];
+                }
+                $variants = array_values(array_unique($variants));
+                $newVariants = array();
+                foreach ($variants as $xmlId) {
+                    $extendedValue = CIBlockPropertyDirectory::GetExtendedValue($propArr, array("VALUE" => $xmlId));
+                    if ($extendedValue) {
+                        $newVariants[$xmlId] = $extendedValue['VALUE'];
+                    }
+                }
+                $resp['LIST'] = $newVariants;
+                $resp['PROPERTY_TYPE'] = 'L';
             }
         } else {
             $resp['SUCCESS'] = 'N';
