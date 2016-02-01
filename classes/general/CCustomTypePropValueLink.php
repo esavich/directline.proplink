@@ -40,7 +40,8 @@ class CCustomTypePropValueLink
                 $currentIblock = $propArr['IBLOCK_ID'];
             }
         }
-        $html = '<input type="hidden"  name="' . $strHTMLControlName['VALUE'] . '"  id="IBLOCK_' . md5($strHTMLControlName['VALUE']) . '_HIDDEN" value="' . htmlentities(json_encode($value["VALUE"])) . '">';
+        $hValue = $value["VALUE"] ? htmlentities(json_encode($value["VALUE"])) : '';
+        $html = '<input type="hidden"  name="' . $strHTMLControlName['VALUE'] . '"  id="IBLOCK_' . md5($strHTMLControlName['VALUE']) . '_HIDDEN" value="' . $hValue . '">';
         $html .= '<select name="" class="' . $arProperty['USER_TYPE'] . '_IBLOCK"  id="IBLOCK_' . md5($strHTMLControlName['VALUE']) . '">';
         $html .= '<option disabled';
         if (!$currentIblock) {
