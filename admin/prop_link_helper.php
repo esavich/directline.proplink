@@ -64,4 +64,4 @@ if (!isset($_GET['iblockId']) && !isset($_GET['propId'])) {
 
 }
 
-echo json_encode($resp);
+echo \Bitrix\Main\Web\Json::encode($resp);

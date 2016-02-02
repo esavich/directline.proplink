@@ -40,7 +40,7 @@ class CCustomTypePropValueLink
                 $currentIblock = $propArr['IBLOCK_ID'];
             }
         }
-        $hValue = $value["VALUE"] ? htmlentities(json_encode($value["VALUE"])) : '';
+        $hValue = $value["VALUE"] ? htmlentities(\Bitrix\Main\Web\Json::encode($value["VALUE"])) : '';
         $html = '<input type="hidden"  name="' . $strHTMLControlName['VALUE'] . '"  id="IBLOCK_' . md5($strHTMLControlName['VALUE']) . '_HIDDEN" value="' . $hValue . '">';
         $html .= '<select name="" class="' . $arProperty['USER_TYPE'] . '_IBLOCK"  id="IBLOCK_' . md5($strHTMLControlName['VALUE']) . '">';
         $html .= '<option disabled';
@@ -85,7 +85,7 @@ class CCustomTypePropValueLink
 
     function ConvertFromDB($arProperty, $value)
     {
-        $value['VALUE'] = json_decode($value['VALUE'], true);
+        $value['VALUE'] = \Bitrix\Main\Web\Json::decode($value['VALUE'], true);
         return $value;
     }
 }
