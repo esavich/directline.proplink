@@ -85,7 +85,9 @@ class CCustomTypePropValueLink
 
     function ConvertFromDB($arProperty, $value)
     {
-        $value['VALUE'] = \Bitrix\Main\Web\Json::decode($value['VALUE'], true);
+        if ($value['VALUE']) {
+            $value['VALUE'] = \Bitrix\Main\Web\Json::decode($value['VALUE'], true);
+        }
         return $value;
     }
 }
