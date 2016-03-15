@@ -13,9 +13,40 @@ class CCustomTypePropValueLink
             'DESCRIPTION' => GetMessage("DIRECTLINE_PROPLINK_PRIVAZKA_K_ZNACHENIU_SVOYSTVU"),
             'GetPropertyFieldHtml' => array(__CLASS__, 'GetPropertyFieldHtml'),
             'ConvertToDB' => array(__CLASS__, 'ConvertToDB'),
-            'ConvertFromDB' => array(__CLASS__, 'ConvertFromDB')
+            'ConvertFromDB' => array(__CLASS__, 'ConvertFromDB'),
+            'GetAdminListViewHTML' => array(__CLASS__, 'GetAdminListViewHTML')
 
         );
+    }
+
+    public static function GetAdminListViewHTML($arProperty, $value, $strHTMLControlName)
+    {
+        if ($value["VALUE"]) {
+            $propArr = CIBlockProperty::GetByID($value['VALUE']['PROPERTY_ID'])->Fetch();
+            if ($propArr['PROPERTY_TYPE'] == 'L') {
+                $enumObj = CIBlockPropertyEnum::GetList(
+                    array("SORT" => "ASC", "VALUE" => "ASC"),
+                    array("PROPERTY_ID" => $PROP_ID, 'ID' => $value['VALUE']['VALUE'])
+                );
+                while ($enumArr = $enumObj->Fetch()) {
+                    $printVal = $enumArr["VALUE"] . ' [' . $enumArr['ID'] . ']';
+                }
+            } elseif ($propArr['PROPERTY_TYPE'] == 'S' && $propArr['USER_TYPE'] == 'directory') {
+
+                $extendedValue = CIBlockPropertyDirectory::GetExtendedValue($propArr,
+                    array("VALUE" => $value['VALUE']['VALUE']));
+                $printVal = $extendedValue['VALUE'] . ' [' . $value['VALUE']['VALUE'] . ']';
+
+            } else {
+                $printVal = $value['VALUE']['VALUE'];
+            }
+
+            $str = $propArr['NAME'] . ' [id: ' . $propArr['ID'] . '] (iblock: ' . $propArr['IBLOCK_ID'] . ') - ' . $printVal;
+            return $str;
+        } else {
+
+            return '';
+        }
     }
 
     public static function GetPropertyFieldHtml($arProperty, $value, $strHTMLControlName)

@@ -39,7 +39,7 @@ if (!isset($_GET['iblockId']) && !isset($_GET['propId'])) {
                 }
             } elseif ($propArr['PROPERTY_TYPE'] == 'S' && $propArr['USER_TYPE'] == 'directory') {
                 $variantsObj = CIBlockElement::GetPropertyValues($propArr['IBLOCK_ID'], array(
-                    '!PROPERTY_' . $propArr[ID] => false
+                    '!PROPERTY_' . $propArr['ID'] => false
                 ), false,
                     array("ID" => $propArr['ID']));
                 $variants = array();
