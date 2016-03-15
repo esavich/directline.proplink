@@ -1,16 +1,17 @@
 jQuery(function ($) {
     var propsByIblockId = {};
     var propVariantsByPropId = {};
-    $('.propLink_IBLOCK, .propValueLink_IBLOCK').on('change', function () {
+    $('.propLink_IBLOCK, .propListValueLink_IBLOCK, .propValueLink_IBLOCK').on('change', function () {
         var iblockId = $(this).val();
+        var filter = $(this).data('type-filter') ? $(this).data('type-filter') : false;
         if (iblockId) {
             var id = $(this).attr('id');
             if (!propsByIblockId[iblockId]) {
                 getProps(iblockId, function () {
-                    updateSelect(id, iblockId);
+                    updateSelect(id, iblockId, filter);
                 });
             } else {
-                updateSelect(id, iblockId);
+                updateSelect(id, iblockId, filter);
             }
         }
 
@@ -22,10 +23,26 @@ jQuery(function ($) {
         if (propId) {
             if (!propVariantsByPropId[propId]) {
                 getPropVariants(propId, function () {
-                    generateInput(id, propId);
+                    generateInput(id, propId, 'propValueLink');
                 });
             } else {
-                generateInput(id, propId);
+                generateInput(id, propId, 'propValueLink');
+            }
+        } else {
+            $("#" + id + "_VALUE").remove();
+            $("#" + id + "_HIDDEN").val('');
+        }
+    });
+    $('.propListValueLink_PROP').on('change', function () {
+        var propId = $(this).val();
+        var id = $(this).attr('id').replace('_PROPS', '');
+        if (propId) {
+            if (!propVariantsByPropId[propId]) {
+                getPropVariants(propId, function () {
+                    generateInput(id, propId, 'propListValueLink');
+                });
+            } else {
+                generateInput(id, propId, 'propListValueLink');
             }
         } else {
             $("#" + id + "_VALUE").remove();
@@ -62,10 +79,16 @@ jQuery(function ($) {
         $('#' + id + '_HIDDEN').val(glued);
     });
 
+    $('.propListValueLink_IBLOCK').closest('td').on('change', '.propListValueLink_VALUE_SELECT', function () {
+        id = $(this).attr('id').replace('_VALUE', '');
+        $('#' + id + '_HIDDEN').val($(this).val());
+    });
+
     function getProps(iblockId, callback) {
         var data = {
             iblockId: iblockId
         };
+
         $.ajax({
             url: '/bitrix/admin/directline.proplink_prop_link_helper.php',
             method: 'GET',
@@ -103,7 +126,7 @@ jQuery(function ($) {
         });
     }
 
-    function generateInput(id, propId) {
+    function generateInput(id, propId, className) {
         var prop = propVariantsByPropId[propId];
 
         var control;
@@ -112,7 +135,7 @@ jQuery(function ($) {
         value = propSelect.data('initial-value');
         oldControl.remove();
         if (prop.TYPE == 'L') {
-            control = $('<select></select>').addClass('propValueLink_VALUE_SELECT').attr({id: id + '_VALUE'});
+            control = $('<select></select>').addClass(className + '_VALUE_SELECT').attr({id: id + '_VALUE'});
             $.each(prop.LIST, function (i, v) {
                 var option = $('<option></option>').val(i).text(v);
                 if (i == value) {
@@ -122,7 +145,7 @@ jQuery(function ($) {
                 option.appendTo(control);
             });
         } else {
-            control = $('<input/>').addClass('propValueLink_VALUE_TEXT').attr({
+            control = $('<input/>').addClass(className + '_VALUE_TEXT').attr({
                 type: 'text',
                 id: id + '_VALUE'
             }).val(value);
@@ -133,18 +156,21 @@ jQuery(function ($) {
         control.insertAfter('#' + id + "_PROPS").change().keyup();
     }
 
-    function updateSelect(id, iblockId) {
+    function updateSelect(id, iblockId, propType) {
+        var propType = typeof propType !== 'undefined' ? propType : false;
         var select = $('#' + id + '_PROPS');
         select.empty();
         var initialValue = select.data('initial-propid');
         $('<option></option>').text('--').val('').appendTo(select);
         $.each(propsByIblockId[iblockId], function (i, v) {
-            var option = $('<option></option>');
-            option.text('[' + v.ID + '] ' + v.NAME + ' (' + v.CODE + ')').val(v.ID);
-            if (initialValue && initialValue == v.ID) {
-                option.attr('selected', true);
+            if (!propType || propType == v.TYPE) {
+                var option = $('<option></option>');
+                option.text('[' + v.ID + '] ' + v.NAME + ' (' + v.CODE + ')').val(v.ID);
+                if (initialValue && initialValue == v.ID) {
+                    option.attr('selected', true);
+                }
+                option.appendTo(select);
             }
-            option.appendTo(select);
         });
         select.change();
     }

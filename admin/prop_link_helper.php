@@ -17,6 +17,7 @@ if (!isset($_GET['iblockId']) && !isset($_GET['propId'])) {
                     'ID' => $propArr['ID'],
                     'NAME' => $propArr['NAME'],
                     'CODE' => $propArr['CODE'],
+                    'TYPE' => $propArr['PROPERTY_TYPE']
                 );
             }
             $resp['SUCCESS'] = 'Y';

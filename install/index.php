@@ -70,6 +70,9 @@ Class directline_proplink extends CModule
             'GetUserTypeDescription');
         RegisterModuleDependences('iblock', 'OnIBlockPropertyBuildList', self::MODULE_ID, 'CCustomTypePropValueLink',
             'GetUserTypeDescription');
+        RegisterModuleDependences('iblock', 'OnIBlockPropertyBuildList', self::MODULE_ID,
+            'CCustomTypePropListValueLink',
+            'GetUserTypeDescription');
 
         return true;
     }
@@ -87,6 +90,9 @@ Class directline_proplink extends CModule
         UnRegisterModuleDependences('iblock', 'OnIBlockPropertyBuildList', self::MODULE_ID, 'CCustomTypePropLink',
             'GetUserTypeDescription');
         UnRegisterModuleDependences('iblock', 'OnIBlockPropertyBuildList', self::MODULE_ID, 'CCustomTypePropValueLink',
+            'GetUserTypeDescription');
+        UnRegisterModuleDependences('iblock', 'OnIBlockPropertyBuildList', self::MODULE_ID,
+            'CCustomTypePropListValueLink',
             'GetUserTypeDescription');
 
 

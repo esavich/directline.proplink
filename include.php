@@ -2,7 +2,8 @@
 
 $arClassesList = array(
     "CCustomTypePropLink" => "classes/general/CCustomTypePropLink.php",
-    "CCustomTypePropValueLink" => "classes/general/CCustomTypePropValueLink.php"
+    "CCustomTypePropValueLink" => "classes/general/CCustomTypePropValueLink.php",
+    "CCustomTypePropListValueLink" => "classes/general/CCustomTypePropListValueLink.php"
 );
 
 $MODULE_ID = basename(dirname(__FILE__));
