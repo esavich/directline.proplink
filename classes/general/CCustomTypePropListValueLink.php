@@ -20,23 +20,13 @@ class CCustomTypePropListValueLink
     public static function GetAdminListViewHTML($arProperty, $value, $strHTMLControlName)
     {
         if ($value["VALUE"]) {
-            $propArr = CIBlockProperty::GetByID($value['VALUE']['PROPERTY_ID'])->Fetch();
-            if ($propArr['PROPERTY_TYPE'] == 'L') {
-                $enumObj = CIBlockPropertyEnum::GetList(
-                    array("SORT" => "ASC", "VALUE" => "ASC"),
-                    array("PROPERTY_ID" => $PROP_ID, 'ID' => $value['VALUE']['VALUE'])
-                );
-                while ($enumArr = $enumObj->Fetch()) {
-                    $printVal = $enumArr["VALUE"] . ' [' . $enumArr['ID'] . ']';
+            if ($value['VALUE']) {
+                $enumArr = CIBlockPropertyEnum::GetByID($value['VALUE']);
+                $propObj = CIBlockProperty::GetByID($enumArr['PROPERTY_ID']);
+                if ($propArr = $propObj->Fetch()) {
+                    kint($enumArr, $propArr);
+                    $printVal = $enumArr['VALUE'] . ' [' . $enumArr['ID'] . ']';
                 }
-            } elseif ($propArr['PROPERTY_TYPE'] == 'S' && $propArr['USER_TYPE'] == 'directory') {
-
-                $extendedValue = CIBlockPropertyDirectory::GetExtendedValue($propArr,
-                    array("VALUE" => $value['VALUE']['VALUE']));
-                $printVal = $extendedValue['VALUE'] . ' [' . $value['VALUE']['VALUE'] . ']';
-
-            } else {
-                $printVal = $value['VALUE']['VALUE'];
             }
 
             $str = $propArr['NAME'] . ' [id: ' . $propArr['ID'] . '] (iblock: ' . $propArr['IBLOCK_ID'] . ') - ' . $printVal;
