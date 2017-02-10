@@ -1,3 +1,18 @@
+function sortProperties(obj) {
+    // convert object into array
+    var sortable = [];
+    for (var key in obj)
+        if (obj.hasOwnProperty(key))
+            sortable.push([key, obj[key]]); // each item is an array in format [key, value]
+
+    // sort items by value
+    sortable.sort(function (a, b) {
+        var x = a[1].toLowerCase(),
+            y = b[1].toLowerCase();
+        return x < y ? -1 : x > y ? 1 : 0;
+    });
+    return sortable; // array in format [ [ key1, val1 ], [ key2, val2 ], ... ]
+}
 jQuery(function ($) {
     var propsByIblockId = {};
     var propVariantsByPropId = {};
@@ -128,6 +143,7 @@ jQuery(function ($) {
 
     function generateInput(id, propId, className) {
         var prop = propVariantsByPropId[propId];
+        prop.LIST = sortProperties(prop.LIST);
 
         var control;
         var oldControl = $("#" + id + "_VALUE");
@@ -137,8 +153,8 @@ jQuery(function ($) {
         if (prop.TYPE == 'L') {
             control = $('<select></select>').addClass(className + '_VALUE_SELECT').attr({id: id + '_VALUE'});
             $.each(prop.LIST, function (i, v) {
-                var option = $('<option></option>').val(i).text(v);
-                if (i == value) {
+                var option = $('<option></option>').val(v[0]).text(v[1]);
+                if (v[0] == value) {
                     option.attr('selected', true);
 
                 }
