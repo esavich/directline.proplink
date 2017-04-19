@@ -143,7 +143,9 @@ jQuery(function ($) {
 
     function generateInput(id, propId, className) {
         var prop = propVariantsByPropId[propId];
-        prop.LIST = sortProperties(prop.LIST);
+        if (!$.isArray(prop.LIST)) {
+            prop.LIST = sortProperties(prop.LIST);
+        }
 
         var control;
         var oldControl = $("#" + id + "_VALUE");
